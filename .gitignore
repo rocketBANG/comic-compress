@@ -1,0 +1,5 @@
+lib/*
+!.gitkeep
+bin/*
+obj/*
+*.dll
