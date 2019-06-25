@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>ComicCompressor</RootNamespace>
+        <OutputName>ComicCompress</OutputName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,4 +17,5 @@
     <ItemGroup>
         <Content CopyToOutputDirectory="PreserveNewest" Include="libwebp.dll" Link="libwebp.dll" Pack="true" PackagePath="libwebp.dll" />
     </ItemGroup>
+
 </Project>
