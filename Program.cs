@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using McMaster.Extensions.CommandLineUtils;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 
 namespace ComicCompressor
 {
@@ -29,7 +30,7 @@ namespace ComicCompressor
         public int Quality { get; } = 75;
 
         [Option("-p|--parallel", Description = "Run in parallel, utilizing all computing resources")]
-        public bool Parallel { get; } = false;
+        public bool IsParallel { get; } = false;
 
         private Logger Logger { get; set; }
 
@@ -49,7 +50,7 @@ namespace ComicCompressor
             Compressor compressor = new Compressor(Logger);
             compressor.Quality = Quality;
 
-            if (!Parallel)
+            if (!IsParallel)
             {
                 foreach (var file in files)
                 {
@@ -58,16 +59,13 @@ namespace ComicCompressor
                 return;
             }
 
-            var tasks = new List<Task>();
-            foreach (var file in files)
+            ParallelOptions options = new ParallelOptions
             {
-                var task = new Task(() => CompressTask(compressor, file));
-                task.Start();
-                tasks.Add(task);
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
 
-            }
-
-            Task.WaitAll(tasks.ToArray());
+            Parallel.ForEach(files, options, file => CompressTask(compressor, file));
+            
         }
 
         private void CompressTask(Compressor compressor, string filename)
